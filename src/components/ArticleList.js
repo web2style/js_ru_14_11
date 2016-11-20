@@ -7,6 +7,7 @@ function ArticleList(props) {
 
     const articleItems = articles.map(article => <li key = {article.id}>
         <Article article = {article} />
+      {/*логичнее внести в Article*/}                              
         {article.comments && <div>
             Комментарии:
             <CommentList comments={article.comments}/>
