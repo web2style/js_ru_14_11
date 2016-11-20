@@ -17,6 +17,7 @@ class Article extends Component {
             <div>
                 <div onClick={this.handleClick}>{toggle}</div>
                 <ul style={{'display': this.state.isOpen ? 'block' : 'none'}}>
+                    {/*советую не писать много кода внутри JSX, быстро становится нечитабельным. вынеси в переменную*/}
                     {comments.map(comment => <li key={comment.id}>
                         <Comment comment={comment} />
                     </li>)}
