@@ -44,7 +44,22 @@ class CommentList extends Component {
         const { comments, isOpen } = this.props
         if (!isOpen || !comments.length) return null
         const commentItems = comments.map(comment => <li key = {comment.id}><Comment comment = {comment} /></li>)
-        return <ul>{commentItems}</ul>
+        return (
+            <div>
+                <h3>Добавить комментарий</h3>
+                <form>
+                    <div>
+                        <label htmlFor='name'>Имя</label><br />
+                        <input id='name' />
+                    </div>
+                    <div>
+                        <label htmlFor='comment'>Комментарий</label><br />
+                        <textarea id='comment' rows='5'></textarea>
+                    </div>
+                </form>
+                <ul>{commentItems}</ul>
+            </div>
+        )
     }
 }
 
