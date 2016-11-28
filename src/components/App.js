@@ -13,6 +13,7 @@ class App extends Component {
 
     state = {
         selected: null,
+        //надо было промежуток дат
         selectedDay: new Date()
     }
 
