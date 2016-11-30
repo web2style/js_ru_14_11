@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 class ArticleList extends Component {
     static propTypes = {
         articles: PropTypes.array.isRequired,
+        filter: PropTypes.array,
         //from accordion decorator
         isOpen: PropTypes.func.isRequired,
         toggleOpenItem: PropTypes.func.isRequired
@@ -35,9 +36,17 @@ class ArticleList extends Component {
 
 
     render() {
-        const { articles, isOpen, toggleOpenItem } = this.props
+        const { articles, filter, isOpen, toggleOpenItem } = this.props
 
-        const articleItems = articles.map(article => (
+        const result = filter[0] ? articles.filter((article) => {
+            let bool = false
+            filter.map((filterItem) => {
+                if (filterItem.value === article.id) bool = true
+            })
+            return bool
+        }) : articles
+
+        const articleItems = result.map(article => (
             <li key = {article.id}>
                 <Article
                     article = {article}
@@ -56,5 +65,6 @@ class ArticleList extends Component {
 }
 
 export default connect(state => ({
-    articles: state.articles
+    articles: state.articles,
+    filter: state.filter
 }))(accordion(ArticleList))
