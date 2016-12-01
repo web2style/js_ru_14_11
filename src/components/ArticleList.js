@@ -37,7 +37,7 @@ class ArticleList extends Component {
 
     render() {
         const { articles, filter, isOpen, toggleOpenItem } = this.props
-
+        //лучше эту логику вынести в connect
         const result = filter[0] ? articles.filter((article) => {
             let bool = false
             filter.map((filterItem) => {
