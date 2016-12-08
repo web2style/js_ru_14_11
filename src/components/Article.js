@@ -24,7 +24,7 @@ class Article extends Component {
         const { article, toggleOpen } = this.props
         return (
             <section>
-                <h3 onClick = {toggleOpen}>{article.title}</h3>
+                <h3 onClick = {toggleOpen}>{article.get('title')}</h3>
                 <a href = "#" onClick = {this.handleDeleteArticle}>delete me</a>
                 {this.getBody()}
             </section>
@@ -37,8 +37,12 @@ class Article extends Component {
         if (!isOpen) return null
         return (
             <div>
-                <p>{article.text}</p>
-                <CommentList commentIds = {article.comments} ref = "comments" />
+                <p>{article.get('text')}</p>
+                <CommentList
+                    commentIds={article.get('comments')}
+                    articleId={article.get('id')}
+                    ref="comments"
+                />
             </div>
         )
     }
@@ -51,11 +55,7 @@ class Article extends Component {
 }
 
 Article.propTypes = {
-    article: PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        comments: PropTypes.array,
-        text: PropTypes.string
-    }).isRequired,
+    article: PropTypes.object.isRequired,
     //from connect
     deleteArticle: PropTypes.func
 }

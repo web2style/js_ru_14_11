@@ -1,13 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 
 class NewCommentForm extends Component {
+    static propTypes = {
+        onAddComment: PropTypes.func.isRequired
+    }
+
     state = {
         text: '',
         user: ''
     }
 
     handleChange = field => ev => {
-        if (ev.target.value.length > 5) return
         this.setState({
             [field]: ev.target.value
         })
@@ -15,11 +18,7 @@ class NewCommentForm extends Component {
 
     handleSubmit = ev => {
         ev.preventDefault()
-        console.log('---', 'adding comment')
-        this.setState({
-            user: '',
-            text: ''
-        })
+        this.props.onAddComment(this.state)        
     }
 
     render() {
