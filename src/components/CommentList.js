@@ -4,12 +4,13 @@ import { addComment } from '../AC/comments'
 import Comment from './Comment'
 import toggleOpen from '../decorators/toggleOpen'
 import NewCommentForm from './NewCommentForm'
+import { loadAllComments } from '../AC/comments'
+import Loader from './Loader'
 
 class CommentList extends Component {
     static propTypes = {
-        commentIds: PropTypes.array.isRequired,
         //from connect
-        comments: PropTypes.array.isRequired,
+        comments: PropTypes.object.isRequired,
         //from toggleOpen decorator
         isOpen: PropTypes.bool.isRequired,
         toggleOpen: PropTypes.func.isRequired
@@ -19,41 +20,33 @@ class CommentList extends Component {
         comments: []
     }
 
-
-    componentWillReceiveProps() {
-        //console.log('---', 'CL receiving props')
-    }
-
-    componentWillUpdate() {
-        //console.log('---', 'CL will update')
-    }
-
-
     render() {
+        const { article, addComment, comments, isOpen, loading, loaded } = this.props
+        const commentForm = <NewCommentForm articleId={article.id} addComment={addComment} />
+        const commentItems = comments.map(comment => { return <li key={comment.get('id')}><Comment comment={comment} /></li> })
         return (
             <div>
-                {this.getButton()}
-                {this.getBody()}
+                {
+                    !loaded || (loaded && comments.size) ?
+                        <a href="#" onClick={this.toggleOpen}>{isOpen ? 'hide' : 'show'} comments</a> :
+                        null
+                }
+                {loaded && !comments.size && <div>No comments yet</div>}
+                {loading && <Loader />}
+                {isOpen && <ul>{commentItems}</ul>}
+                <div>{commentForm}</div>
             </div>
         )
     }
 
-
-    getButton() {
-        const { comments, isOpen, toggleOpen } = this.props
-        if ( !comments.length) return <span>No comments yet</span>
-        return <a href="#" onClick = {toggleOpen}>{isOpen ? 'hide' : 'show'} comments</a>
-    }
-
-    getBody() {
-        const { article, comments, isOpen, addComment } = this.props
-        const commentForm = <NewCommentForm articleId = {article.id} addComment = {addComment} />
-        if (!isOpen || !comments.length) return <div>{commentForm}</div>
-        const commentItems = comments.map(comment => <li key = {comment.id}><Comment comment = {comment} /></li>)
-        return <div><ul>{commentItems}</ul>{commentForm}</div>
+    toggleOpen = () => {
+        if (!this.props.comments.size) this.props.loadAllComments()
+        this.props.toggleOpen()
     }
 }
 
 export default connect((state, props) => ({
-    comments: (props.article.comments || []).map(id => state.comments.get(id))
-}), { addComment })(toggleOpen(CommentList))
+    comments: state.comments.entities.filter(comment => props.article.get('comments').some(value => value === comment.get('id'))),
+    loading: state.comments.loading,
+    loaded: state.comments.loaded
+}), { addComment, loadAllComments })(toggleOpen(CommentList))

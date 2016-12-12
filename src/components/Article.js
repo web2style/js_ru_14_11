@@ -13,16 +13,8 @@ class Article extends Component {
     }
 */
 
-    componentWillUpdate() {
-        console.log('---', 'updating Article')
-    }
-
     componentWillReceiveProps(nextProps) {
         if (nextProps.isOpen && !this.props.isOpen && !nextProps.article.text) this.props.loadArticle(this.props.article.id)
-    }
-
-    componentDidUpdate() {
-        console.log('---', findDOMNode(this.refs.comments))
     }
 
     render() {
